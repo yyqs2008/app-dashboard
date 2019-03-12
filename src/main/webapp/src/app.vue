@@ -6,20 +6,7 @@
 </template>
 
 <script>
-    export default{
-        data(){
-            return{
-                msg: 'hello! webpack4-vue-demo!'
-            }
-        }
-    }
+    import appLess from './static/appdas.less';
+    import appJs from './static/appdas.js';
+    export default appJs;
 </script>
-
-<style lang='less'>
-    .example {
-        color: red;
-        span{
-            color:blue;
-        }
-    }
-</style>
