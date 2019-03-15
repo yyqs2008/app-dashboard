@@ -26,7 +26,10 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "echarts": "^4.1.0",
+    "echarts-liquidfill": "^2.0.4",
     "imports-loader": "^0.8.0",
-    "snapsvg": "^0.5.1"
+    "snapsvg": "^0.5.1",
+    "vue-echarts": "^4.0.1"
   }
 }

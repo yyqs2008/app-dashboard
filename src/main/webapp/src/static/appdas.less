@@ -37,6 +37,7 @@ html,body{
         }
     }
     .chart_cont {
+
         flex: 1;
         display:flex;
         flex-flow:row;
@@ -53,7 +54,6 @@ html,body{
         }
         .column-div{
             flex: 1;
-            height: inherit;
             .chart-title{
                 font-size: 14px;
                 text-shadow:rgba(0,250,255,1) 0px 0px 0px,rgba(0,0,0,1) 0px 0px 10px;
@@ -76,8 +76,6 @@ html,body{
                     border:1px solid rgba(0,250,255,.1);
                     height:inherit;
                     box-shadow: rgba(0,0,0,.1) 0px 0px 100px 20px inset;
-                    //box-shadow: rgba(0,0,0,.6) 0px 0px 10px ;
-                    //background: linear-gradient(to left top, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
                 }
             }
             span[class^='corner-icon']{
@@ -105,7 +103,7 @@ html,body{
                 box-shadow: rgba(0,0,0,.2) 0px -1px 5px;
                 font-size: 9px;
                 position: absolute;
-                top:-11px;
+                top:-18px;
                 right:18px;
                 display: flex;
                 flex-flow: row;
@@ -114,19 +112,15 @@ html,body{
                 text-shadow:rgba(0,250,255,1) 0px 0px 0px,rgba(0,0,0,1) 0px 0px 10px;
                 color:rgba(77,175,240,.8);
                 i{
-                    padding: 0px 8px;
+                    padding: 3px 8px;
                 }
                 span{
                     flex:1;
                     width:32px;
                     text-align: center;
-                    padding:2px 0px;
+                    padding:5px 2px;
                     box-shadow:none;
                     cursor: pointer;
-                    color:rgba(200,200,200,.8);
-                    &:not(:last-child){
-                        border-right:1px dashed rgba(0,250,255,.1);
-                    }
                     &:hover, &[selection]{
                         box-shadow: rgba(0,0,0,.2) 0px 1px 2px 2px inset;
                         text-shadow: rgba(0,250,255,1) 0px 0px 1px;

@@ -1,5 +1,5 @@
 import Snap from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist/snap.svg.js'
-
+import echarts from 'echarts'
 
 /**
  *  数字滚动插件
@@ -110,24 +110,29 @@ const numberAnimate = function(setting) {
  * SVG绘制导航抬头
  */
 const drawNavgetion = function(svgId){
-    let instance = {};
+    const SVG = Snap(svgId);
+    let instance = {path:null};
     instance.navgetion = ()=>{
         let [documentWidth,documentHeight,bottomBorder]=[document.body.clientWidth, 40, 200];
-        const SVG = Snap(svgId);
         let shapeShadow = SVG.filter(Snap.filter.shadow(0, 2, 5,"#000000",.6));
         let lgrad= SVG.gradient("l(0, 0, 1, 0)rgba(77,135,250,0)-rgba(77,135,250,.3)-rgba(77,135,250,0)");
-        let _path = SVG.path("M 0 0 H "+documentWidth+" V "+documentHeight+" h -"+((documentWidth)/2-(bottomBorder/2+60))+" q -15 0 -30 15 t -30 15  h -"+bottomBorder+" q -15 0 -30 -15 t -30 -15 H 0 Z").attr({
+        instance.path = SVG.path("M 0 0 H "+documentWidth+" V "+documentHeight+" h -"+((documentWidth)/2-(bottomBorder/2+60))+" q -15 0 -30 15 t -30 15  h -"+bottomBorder+" q -15 0 -30 -15 t -30 -15 H 0 Z").attr({
             fill: lgrad,
             filter: shapeShadow,
             stroke: lgrad,
             strokeWidth: 2.5
         });
-        window.onresize = function(){
-            //instance.navgetion();
-        }
+        return instance;
+    }
+    instance.resize = ()=>{
+        let [documentWidth,documentHeight,bottomBorder]=[document.body.clientWidth, 40, 200];
+        instance.path.attr({
+            d:"M 0 0 H "+documentWidth+" V "+documentHeight+" h -"+((documentWidth)/2-(bottomBorder/2+60))+" q -15 0 -30 15 t -30 15  h -"+bottomBorder+" q -15 0 -30 -15 t -30 -15 H 0 Z"
+        });
     }
     return instance;
 }
+
 /**
  * SVG绘制调用关系拓扑图
  * @param svgId
@@ -253,7 +258,7 @@ const drawShape = function(svgId){
                 let _text = SVG.text(50,50,text).attr({
                     fill: "white",
                     fontWeight: "bold",
-                    fontSize: 16,
+                    fontSize: 14,
                     textAnchor: "middle",
                     filter: "url('#text-shadow')"
                 });
@@ -421,20 +426,391 @@ const drawShape = function(svgId){
     return instance;
 }
 
+/**
+ * 监听浏览器窗口大小变动，调用各图表的宽高自适应
+ */
+const windowResize = function($v,nav){
+    window.addEventListener("resize", () => {
+        [nav, $v.$refs.waterLevelChart, $v.$refs.timeconsChart, $v.$refs.tpsChart, $v.$refs.healthChart,
+            $v.$refs.tpsPie, $v.$refs.avgPie, $v.$refs.tpPie, $v.$refs.failPie
+        ].forEach(el=> el.resize());
+    });
+}
+
+
+const drawEcharts = function(){
+    let optionBase = {
+        backgroundColor: 'transparent',
+        color: ['rgba(77,175,240,1)','rgba(70,250,225,1)','#f0b41e','rgba(182,151,204,1)',"rgba(249,38,114,1)"],
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            top:30,
+            bottom:35,
+            left: 60,
+            right: 60
+        },
+        legend: {
+            top:5,
+            right:5,
+            itemWidth:14,
+            itemHeight:6,
+            orient:'vertical',
+            textStyle: {
+                fontSize:12,
+                color: 'rgba(77,175,240,1)',
+                textShadowColor: 'rgba(0,250,255,.6)',
+                textShadowBlur:5
+            },
+            tooltip: {
+                show: true
+            },
+            formatter: function (name) {
+                return echarts.format.truncateText(name, 48, '12px Microsoft Yahei', '…');
+            },
+            data:[]
+        },
+        xAxis: [{
+            axisTick: {
+                show:true,
+                lineStyle: {
+                    color: 'rgba(170,255,255, 0.51)',
+                    shadowColor: 'rgba(0,250,255,1)',
+                    shadowBlur:5
+                }
+            },
+            axisLine: {
+                show:false,
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                textStyle: {
+                    color: 'rgb(165,235,250)',
+                    textShadowColor: 'rgba(0,250,255,1)',
+                    textShadowBlur:5
+                }
+            },
+            data: []
+        }],
+        yAxis: [
+            {
+                axisTick: {
+                    show:true,
+                    lineStyle: {
+                        color: 'rgba(170,255,255, 0.51)',
+                        shadowColor: 'rgba(0,250,255,1)',
+                        shadowBlur:5
+                    }
+                },
+                axisLine: {
+                    show:false
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: 'rgb(165,235,250)',
+                        textShadowColor: 'rgba(0,250,255,1)',
+                        textShadowBlur:10
+                    },
+                    formatter:function(val) {
+                        if(true){
+                            if(val / 3600000 >= 1){
+                                return (val / 3600000).toFixed(1) + '时';
+                            } else if(val / 60000 >= 1){
+                                return (val / 60000).toFixed(1) + '分';
+                            } else if(val / 1000 >= 1){
+                                return (val / 1000).toFixed(1) + 's';
+                            } else{
+                                return val +'ms';
+                            }
+                        }else{
+                            if(val > 0){
+                                if(val / 100000000 >= 1){
+                                    return (val / 100000000).toFixed(0) + '亿';
+                                } else if(val / 10000 >= 1){
+                                    return  (val / 10000).toFixed(0) + '万';
+                                }else if(val / 1000 >= 1){
+                                    return  (val / 1000).toFixed(0) + '千';
+                                }
+                            }
+                        }
+                        return val;
+                    }
+                }
+            },
+            {
+                axisTick: {
+                    show:true,
+                    lineStyle: {
+                        color: 'rgba(170,255,255, 0.51)',
+                        shadowColor: 'rgba(0,250,255,1)',
+                        shadowBlur:5
+                    }
+                },
+                axisLine: {
+                    show:false,
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: 'rgb(165,235,250)',
+                        textShadowColor: 'rgba(0,250,255,1)',
+                        textShadowBlur:10
+                    },
+                    formatter:function(val) {
+                        return val+"%";
+                    }
+                }
+            }
+        ],
+        series: []
+    };
+
+    let instance = {}
+
+    instance.line = function(){
+        let option = Object.assign({},optionBase);
+        option.legend.data = ['邮件营','联盟广','视频广','直接访','搜索引'];
+        option.xAxis[0].data = ['周一','周二','周三','周四','周五','周六','周日'];
+        option.series =
+        [
+            {
+                name:'邮件营',
+                type:'line',
+                stack: '总量',
+                data:[120, 132, 101, 134, 90, 230, 210],smooth: true
+            },
+            {
+                name:'联盟广',
+                type:'line',
+                stack: '总量',
+                data:[220, 182, 191, 234, 290, 330, 310],smooth: true
+            },
+            {
+                name:'视频广',
+                type:'line',
+                stack: '总量',
+                data:[150, 232, 201, 154, 190, 330, 410],smooth: true
+            },
+            {
+                name:'直接访',
+                type:'line',
+                stack: '总量',
+                data:[320, 332, 301, 334, 390, 330, 320],smooth: true
+            },
+            {
+                name:'搜索引',
+                type:'line',
+                stack: '总量',
+                data:[820, 932, 901, 934, 1290, 1330, 1320],smooth: true
+            }
+        ];
+        return option;
+    };
+
+    instance.bar = function(){
+        let option = Object.assign({}, optionBase);
+        Object.assign(option.legend,{right:'auto',orient:'horizontal'});
+        option.legend.data = ['邮件营','联盟广','视频广','直接访','搜索引'];
+        option.xAxis[0].data = ['周一','周二','周三','周四','周五','周六','周日'];
+        option.series =
+        [
+            {
+                name:'邮件营',
+                type:'bar',
+                stack: '总量1',
+                data:[120, 132, 101, 134, 90, 230, 210],
+                itemStyle: {
+                    normal: {
+                        color: option.color[1]
+                    }
+                }
+            },
+            {
+                name:'联盟广',
+                type:'bar',
+                stack: '总量1',
+                data:[220, 182, 191, 234, 290, 330, 310],
+                itemStyle: {
+                    normal: {
+                        color: option.color[4]
+                    }
+                }
+            },
+            {
+                name:'视频广',
+                type:'line',
+                yAxisIndex: 1,
+                smooth: true,
+                data:[50, 32, 21, 14, 90, 30, 10],
+                itemStyle: {
+                    normal: {
+                        color: option.color[2]
+                    }
+                }
+            },
+        ]
+        return option;
+    };
+
+    instance.liquidFill = function(){
+        let option = {
+            series: [{
+                type: 'liquidFill',
+                radius: '70%',
+                data: [{
+                    value: 0.2,
+                    period: 1500,
+                    amplitude: 5,
+                    waveLength: '100%'
+                }],
+                itemStyle: {
+                    shadowBlur: 25,
+                    shadowColor: 'rgba(0,0,0,1)',
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(77,175,240,.4)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(77,175,240,.1)'
+                        }]
+                    )
+                },
+                outline: {
+                    borderDistance: 2,
+                    itemStyle: {
+                        borderWidth: 6,
+                        borderColor: 'rgba(77,135,240,.7)',
+                        shadowBlur: 25,
+                        shadowColor: 'rgba(0,0,0,1)'
+                    }
+                },
+                label: {
+                    color:"rgba(77,175,240,.8)",
+                },
+                backgroundStyle: {
+                    color: 'transparent'
+                }
+            }]
+        };
+        return option;
+    };
+
+    instance.pie = function(){
+        let option = {
+            title: {
+                x: '48%',
+                y: '39%',
+                text: 'TPS',
+                subtext:'10.5W',
+                textAlign: "center",
+                textStyle: {
+                    color: "#fff",
+                    fontSize:'90%',
+                    textShadowColor: 'rgba(0,250,255,1)',
+                    textShadowBlur:10
+                },
+                subtextStyle: {
+                    fontWeight: 'bold',
+                    fontSize: "78%",
+                    color: '#3ea1ff'
+                }
+            },
+            series: [{
+                name: ' ',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                "avoidLabelOverlap": false,
+                startAngle: 225,
+                color: [new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
+                    offset: 0,
+                    color: 'rgba(170,255,255,.6)'
+                },{
+                    offset: 1,
+                    color: '#00a2ff'
+                }]), "transparent"],
+                hoverAnimation: false,
+                legendHoverLink: false,
+                itemStyle: {
+                    normal: {
+                        borderColor: "transparent",
+                        borderWidth: 20,
+                        shadowColor: 'rgba(77,175,255,.6)',
+                        shadowBlur:8
+                    }
+                },
+                z: 10,
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                    value: 0,
+                    name:" "
+                }, {
+                    value: 25,
+                    name:"  "
+                }]
+            }, {
+                name: '',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                color: ["rgba(18,218,240,.1)", "transparent"],
+                startAngle: 225,
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                    value: 75,
+                    name:"   "
+                }, {
+                    value: 25,
+                    name:"    "
+                }]
+            }]
+        };
+
+        let value_2=44;
+        option.series[0].data[0].value = value_2;
+        option.series[0].data[1].value = 100 - value_2;
+        return option;
+    };
+
+    return instance;
+}
+
+
+
 export default {
     data() {
         return {
             appName: "小金库2.0-查询服务",
             sysdate: new Date(),
+
+            waterLevel:drawEcharts().liquidFill(),
+
+            optionLine:drawEcharts().line(),
+
+            optionBar:drawEcharts().bar(),
+
+            pie:drawEcharts().pie()
         }
     },
     methods: {
-        drawSvgShape() {
-
-        }
     },
     mounted() {
-        drawNavgetion("#svgroot").navgetion();
+        let nav = drawNavgetion("#svgroot").navgetion();
 
 
         let shape = drawShape("#svgCanvas");
@@ -458,5 +834,6 @@ export default {
             todayNumber.resetData(nums2);
         },2000);
 
+        windowResize(this,nav);
     }
 }

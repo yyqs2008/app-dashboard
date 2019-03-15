@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container" style="width:100%; height:100%;">
+    <div class="app-container">
         <nav class="navgetion">
             <div class='title'>
                 <div class="text">{{ appName }}</div>
@@ -15,7 +15,9 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv'></div>
+                        <div class='chartDiv'>
+                            <chart :options="waterLevel" class="chart-main" ref="waterLevelChart" auto-resize style="width: 100%;height: 100%;"/>
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
@@ -30,7 +32,9 @@
                             <span data="9" selection>tp99</span>
                         </div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv'></div>
+                        <div  class='chartDiv'>
+                            <chart :options="optionLine" class="chart-main" ref="timeconsChart" auto-resize style="width: 100%;height: 100%;"/>
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
@@ -40,7 +44,9 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv'></div>
+                        <div  class='chartDiv'>
+                            <chart :options="optionLine" class="chart-main" ref="tpsChart" auto-resize style="width: 100%;height: 100%;"/>
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
@@ -64,16 +70,24 @@
                     </nav>
                     <nav class="tatf">
                         <div>
-                            <nav id="tpsPie"></nav>
+                            <nav id="tpsPie">
+                                <chart :options="pie" class="chart-main" ref="tpsPie" auto-resize style="width: 100%;height: 100%;"/>
+                            </nav>
                         </div>
                         <div>
-                            <nav id="avgPie"></nav>
+                            <nav id="avgPie">
+                                <chart :options="pie" class="chart-main" ref="avgPie" auto-resize style="width: 100%;height: 100%;"/>
+                            </nav>
                         </div>
                         <div>
-                            <nav id="tpPie"></nav>
+                            <nav id="tpPie">
+                                <chart :options="pie" class="chart-main" ref="tpPie" auto-resize style="width: 100%;height: 100%;"/>
+                            </nav>
                         </div>
                         <div>
-                            <nav id="failPie"></nav>
+                            <nav id="failPie">
+                                <chart :options="pie" class="chart-main" ref="failPie" auto-resize style="width: 100%;height: 100%;"/>
+                            </nav>
                         </div>
                     </nav>
                 </div>
@@ -86,17 +100,6 @@
                         <div  class='chartDiv' id="svgDiv">
                             <svg id="svgCanvas" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMinYMid meet" viewBox="-500,-140,1000,300">
                                 <defs>
-                                    <linearGradient id="linear-1" x1="0%" y1="100%" x2="0%" y2="0%">
-                                        <stop offset="0%" style="stop-color:rgb(10,10,10);stop-opacity:0;"></stop>
-                                        <stop offset="100%" style="stop-color:rgb(10,10,10);stop-opacity:.2;"></stop>
-                                    </linearGradient>
-
-                                    <linearGradient id="linear-2" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:0.05;"></stop>
-                                        <stop offset="50%" style="stop-color:rgb(0,0,0);stop-opacity:0.3;"></stop>
-                                        <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0.05;"></stop>
-                                    </linearGradient>
-
                                     <radialGradient id="radial-1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
                                         <stop offset="60%" style="stop-color:rgb(10,10,10);stop-opacity:0;"></stop>
                                         <stop offset="100%" style="stop-color:rgb(10,10,10);stop-opacity:0.2;"></stop>
@@ -106,24 +109,6 @@
                                         <stop offset="40%" style="stop-color:rgb(10,10,10);stop-opacity:0;"></stop>
                                         <stop offset="100%" style="stop-color:rgb(10,10,10);stop-opacity:0.06;"></stop>
                                     </radialGradient>
-
-                                    <filter id="box-shadow">
-                                        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"></feGaussianBlur>
-                                        <feOffset dx="0" dy="2" result="offset"></feOffset>
-                                        <feMerge>
-                                            <feMergeNode in="offset"></feMergeNode>
-                                            <feMergeNode in="SourceGraphic"></feMergeNode>
-                                        </feMerge>
-                                    </filter>
-
-                                    <filter id="box-shadow1">
-                                        <feGaussianBlur in="SourceAlpha" stdDeviation="2"></feGaussianBlur>
-                                        <feOffset dx="0" dy="0" result="offset"></feOffset>
-                                        <feMerge>
-                                            <feMergeNode in="offset"></feMergeNode>
-                                            <feMergeNode in="SourceGraphic"></feMergeNode>
-                                        </feMerge>
-                                    </filter>
 
                                     <filter id="box-shadow2">
                                         <feGaussianBlur in="SourceAlpha" stdDeviation="6"></feGaussianBlur>
@@ -179,7 +164,9 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv' id="healthChart"></div>
+                        <div  class='chartDiv' id="healthChart">
+                            <chart :options="optionLine" class="chart-main" ref="healthChart" auto-resize style="width: 100%;height: 100%;"/>
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
@@ -207,7 +194,9 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv' id="succrateChart"></div>
+                        <div  class='chartDiv' id="succrateChart">
+                            <chart :options="optionBar" class="chart-main" ref="healthChart" auto-resize style="width: 100%;height: 100%;"/>
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
