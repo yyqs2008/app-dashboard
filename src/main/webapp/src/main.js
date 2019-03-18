@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './app.vue'
 import {formatDate} from './utils/formatDate'
+import {formatNumber} from './utils/formatNumber'
 import ECharts from 'vue-echarts'
 import "echarts-liquidfill"
 import 'echarts/lib/chart/bar'
@@ -9,6 +10,7 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/radar'
 
 Vue.prototype.$formatDate = formatDate;
+Vue.prototype.$formatNumber = formatNumber;
 
 // 注册组件后即可使用
 //ECharts.registerTheme('dark', {});

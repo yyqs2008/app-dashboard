@@ -1,3 +1,9 @@
+/**
+ * 时间格式化
+ * @param dt
+ * @param fmt
+ * @returns {*}
+ */
 export function formatDate(dt, fmt='yyyy-MM-dd hh:mm:ss') {
     if(!dt) return dt;
     var date = new Date(dt);
