@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container swap">
         <nav class="navgetion">
             <div class='title'>
                 <div class="text">{{ appName }}</div>
@@ -16,7 +16,7 @@
                     <div>
                         <span class='corner-icon-t'></span>
                         <div class='chartDiv'>
-                            <chart :options="waterLevel" class="chart-main" ref="waterLevelChart" auto-resize style="width: 100%;height: 100%;"/>
+                            <chart :options="waterLevel_O" ref="waterLevel_C" class="chart-main" auto-resize/>
                         </div>
                         <span class='corner-icon-b'></span>
                     </div>
@@ -33,7 +33,7 @@
                         </div>
                         <span class='corner-icon-t'></span>
                         <div  class='chartDiv'>
-                            <chart :options="optionLine" class="chart-main" ref="timeconsChart" auto-resize style="width: 100%;height: 100%;"/>
+                            <chart :options="timeCons_O"  ref="timeCons_C" class="chart-main" auto-resize/>
                         </div>
                         <span class='corner-icon-b'></span>
                     </div>
@@ -45,7 +45,7 @@
                     <div>
                         <span class='corner-icon-t'></span>
                         <div  class='chartDiv'>
-                            <chart :options="optionLine" class="chart-main" ref="tpsChart" auto-resize style="width: 100%;height: 100%;"/>
+                            <chart :options="tps_O" ref="tps_C" class="chart-main" auto-resize/>
                         </div>
                         <span class='corner-icon-b'></span>
                     </div>
@@ -71,22 +71,22 @@
                     <nav class="tatf">
                         <div>
                             <nav id="tpsPie">
-                                <chart :options="pie" class="chart-main" ref="tpsPie" auto-resize style="width: 100%;height: 100%;"/>
+                                <chart :options="tpsPie_O" ref="tpsPie_C" class="chart-main" auto-resize/>
                             </nav>
                         </div>
                         <div>
                             <nav id="avgPie">
-                                <chart :options="pie" class="chart-main" ref="avgPie" auto-resize style="width: 100%;height: 100%;"/>
+                                <chart :options="avgPie_O" ref="avgPie_C" class="chart-main" auto-resize/>
                             </nav>
                         </div>
                         <div>
                             <nav id="tpPie">
-                                <chart :options="pie" class="chart-main" ref="tpPie" auto-resize style="width: 100%;height: 100%;"/>
+                                <chart :options="tpPie_O" ref="tpPie_C" class="chart-main" auto-resize/>
                             </nav>
                         </div>
                         <div>
                             <nav id="failPie">
-                                <chart :options="pie" class="chart-main" ref="failPie" auto-resize style="width: 100%;height: 100%;"/>
+                                <chart :options="failPie_O" ref="failPie_C" class="chart-main" auto-resize/>
                             </nav>
                         </div>
                     </nav>
@@ -164,8 +164,8 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv' id="healthChart">
-                            <chart :options="optionLine" class="chart-main" ref="healthChart" auto-resize style="width: 100%;height: 100%;"/>
+                        <div  class='chartDiv'>
+                            <chart :options="health_O" ref="health_C" class="chart-main" auto-resize  />
                         </div>
                         <span class='corner-icon-b'></span>
                     </div>
@@ -184,7 +184,9 @@
                             <i>小时</i>
                         </div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv'></div>
+                        <div class='chartDiv'>
+                            <chart :options="alarm_O" ref="alarm_C" class="chart-main" auto-resize  />
+                        </div>
                         <span class='corner-icon-b'></span>
                     </div>
                 </div>
@@ -194,8 +196,8 @@
                     </span>
                     <div>
                         <span class='corner-icon-t'></span>
-                        <div  class='chartDiv' id="succrateChart">
-                            <chart :options="optionBar" class="chart-main" ref="healthChart" auto-resize style="width: 100%;height: 100%;"/>
+                        <div  class='chartDiv'>
+                            <chart :options="succrate_O" ref="succrate_C" class="chart-main" auto-resize  />
                         </div>
                         <span class='corner-icon-b'></span>
                     </div>

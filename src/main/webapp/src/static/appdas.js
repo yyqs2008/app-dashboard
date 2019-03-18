@@ -431,8 +431,10 @@ const drawShape = function(svgId){
  */
 const windowResize = function($v,nav){
     window.addEventListener("resize", () => {
-        [nav, $v.$refs.waterLevelChart, $v.$refs.timeconsChart, $v.$refs.tpsChart, $v.$refs.healthChart,
-            $v.$refs.tpsPie, $v.$refs.avgPie, $v.$refs.tpPie, $v.$refs.failPie
+        [nav,
+            $v.$refs.waterLevel_C, $v.$refs.timeCons_C, $v.$refs.tps_C,
+            $v.$refs.tpsPie_C, $v.$refs.avgPie_C, $v.$refs.tpPie_C, $v.$refs.failPie_C,
+            $v.$refs.health_C,$v.$refs.alarm_C,$v.$refs.succrate_C
         ].forEach(el=> el.resize());
     });
 }
@@ -575,6 +577,51 @@ const drawEcharts = function(){
 
     let instance = {}
 
+    instance.liquidFill = function(){
+        let option = {
+            series: [{
+                type: 'liquidFill',
+                radius: '75%',
+                data: [{
+                    value: 0,
+                    period: 1500,
+                    amplitude: 5,
+                    waveLength: '100%'
+                }],
+                itemStyle: {
+                    shadowBlur: 25,
+                    shadowColor: 'rgba(0,0,0,1)',
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(77,175,240,.4)'
+                        }, {
+                            offset: 1,
+                            color: 'rgba(77,175,240,.1)'
+                        }]
+                    )
+                },
+                outline: {
+                    borderDistance: 2,
+                    itemStyle: {
+                        borderWidth: 6,
+                        borderColor: 'rgba(77,135,240,.7)',
+                        shadowBlur: 25,
+                        shadowColor: 'rgba(0,0,0,1)'
+                    }
+                },
+                label: {
+                    color:"rgba(77,175,240,.8)",
+                },
+                backgroundStyle: {
+                    color: 'transparent'
+                }
+            }]
+        };
+        option.series[0].data[0].value = 0.6;
+        return option;
+    };
+
     instance.line = function(){
         let option = Object.assign({},optionBase);
         option.legend.data = ['邮件营','联盟广','视频广','直接访','搜索引'];
@@ -660,57 +707,13 @@ const drawEcharts = function(){
         return option;
     };
 
-    instance.liquidFill = function(){
-        let option = {
-            series: [{
-                type: 'liquidFill',
-                radius: '70%',
-                data: [{
-                    value: 0.2,
-                    period: 1500,
-                    amplitude: 5,
-                    waveLength: '100%'
-                }],
-                itemStyle: {
-                    shadowBlur: 25,
-                    shadowColor: 'rgba(0,0,0,1)',
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1, [{
-                            offset: 0,
-                            color: 'rgba(77,175,240,.4)'
-                        }, {
-                            offset: 1,
-                            color: 'rgba(77,175,240,.1)'
-                        }]
-                    )
-                },
-                outline: {
-                    borderDistance: 2,
-                    itemStyle: {
-                        borderWidth: 6,
-                        borderColor: 'rgba(77,135,240,.7)',
-                        shadowBlur: 25,
-                        shadowColor: 'rgba(0,0,0,1)'
-                    }
-                },
-                label: {
-                    color:"rgba(77,175,240,.8)",
-                },
-                backgroundStyle: {
-                    color: 'transparent'
-                }
-            }]
-        };
-        return option;
-    };
-
     instance.pie = function(){
         let option = {
             title: {
                 x: '48%',
                 y: '39%',
-                text: 'TPS',
-                subtext:'10.5W',
+                text: '-',
+                subtext:'-',
                 textAlign: "center",
                 textStyle: {
                     color: "#fff",
@@ -781,12 +784,243 @@ const drawEcharts = function(){
             }]
         };
 
-        let value_2=44;
-        option.series[0].data[0].value = value_2;
-        option.series[0].data[1].value = 100 - value_2;
+        let value=44;
+        option.series[0].data[0].value = value;
+        option.series[0].data[1].value = 100 - value;
+        option.title.text="TPS";
+        option.title.subtext="10.6W";
         return option;
     };
 
+    instance.radar = function(){
+        let option = {
+            tooltip:{},
+            title: {
+                text: '100%',
+                x: 'center',
+                y: '47%',
+                textStyle: {
+                    fontWeight: 'bold',
+                    color: "#fff",
+                    fontSize:'250%',
+                    textShadowColor: 'rgba(0,250,255,1)',
+                    textShadowBlur:10
+                }
+            },
+            radar: {
+                center: ['50%', '55%'],
+                splitNumber: 5,
+                shape: 'circle',
+                name: {
+                    textStyle: {
+                        color: 'rgba(77,175,240,1)',
+                        textShadowColor: 'rgba(0,0,0,.6)',
+                        textShadowBlur:10
+                    },
+                },
+                splitLine: {
+                    lineStyle: {
+                        width: 3,
+                        color: "rgba(30,70,135,.8)",
+                        shadowColor: 'rgba(0,0,0,1)',
+                        shadowBlur: 10
+                    }
+                },
+                splitArea: {
+                    show: false
+                },
+                axisLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        width: 1.5,
+                        color: "rgba(77,175,240,.5)",
+                        shadowColor: 'rgba(0,0,0,1)',
+                        shadowBlur: 10
+                    }
+                },
+                indicator: []
+            },
+            series: [{
+                type: 'radar',
+                symbolSize: 5,
+                symbol: "emptyCircle",
+                showSymbol: true,
+                lineStyle: {
+                    normal: {
+                        width: 2,
+                        shadowColor: 'rgba(0,250,255,1)',
+                        shadowBlur: 2
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'rgba(77,175,240,.5)',
+                        shadowColor: 'rgba(0,250,255,1)',
+                        shadowBlur: 5
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        opacity: .8,
+                        shadowBlur: 5,
+                        shadowColor: 'rgba(0,0,0,.2)',
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 10
+                    }
+                },
+                data: []
+            }]
+        }
+        option.title.text="99%";
+        option.radar.indicator = [
+            { name: '销售', max: 6500},
+            { name: '管理', max: 16000},
+            { name: '信息技术', max: 30000},
+            { name: '客服', max: 38000},
+            { name: '研发', max: 52000}
+        ];
+        option.series[0].data=[{
+            value : [4300, 10000, 28000, 35000, 50000],
+            name : '分配'
+        }];
+        return option;
+    };
+
+    instance.pieBar = function(){
+        let option = {
+            title:[
+                {
+                    text:"告警规则TOP7",
+                    x: '9%',
+                    y: '3%',
+                    textStyle: {
+                        fontSize:12,
+                        color: 'rgba(77,175,240,1)',
+                        textShadowColor: 'rgba(0,250,255,.6)',
+                        textShadowBlur:5
+                    },
+                },
+                {
+                    text:"告警分类占比",
+                    x: '75%',
+                    y: '3%',
+                    textStyle: {
+                        fontSize:12,
+                        color: 'rgba(77,175,240,1)',
+                        textShadowColor: 'rgba(0,250,255,.6)',
+                        textShadowBlur:5
+                    },
+                }
+            ],
+            grid: {
+                top:'40',
+                bottom:'10',
+                right:'32%',
+                left: '20%'
+            },
+            tooltip: {
+                formatter: '{b} ({c})'
+            },
+            xAxis: [{
+                    gridIndex: 0,
+                    axisTick: {show:false},
+                    axisLabel: {show:false},
+                    splitLine: {show:false},
+                    axisLine: {show:false }
+            }],
+            yAxis: [{
+                    gridIndex: 0,
+                    interval:0,
+                    axisTick: {
+                        show:true,
+                        lineStyle: {
+                            color: 'rgba(170,255,255, 0.51)',
+                            shadowColor: 'rgba(0,250,255,1)',
+                            shadowBlur:5
+                        }
+                    },
+                    axisLine: {
+                        show:true,
+                        lineStyle: {
+                            color: 'rgba(170,255,255, 0.51)',
+                            shadowColor: 'rgba(0,250,255,1)',
+                            shadowBlur:5
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: 'rgb(165,235,250)',
+                            textShadowColor: 'rgba(0,250,255,1)',
+                            textShadowBlur:10
+                        },
+                        formatter: function (value, index) {
+                            if(value.substr(0,2)=="应用"){
+                                value = value.substr(2);
+                            }
+                            return echarts.format.truncateText(value, 80, '10px Microsoft Yahei', '…');
+                        }
+                    },
+                    data:[]
+            }],
+            series: [
+                {
+                    name: '告警分类占比',
+                    z:2,
+                    type: 'pie',
+                    radius: ['20%', '30%'],
+                    center: ['82%', '70%'],
+                    color:['rgba(170,255,255,0.8)','rgba(134,200,243,0.8)','rgba(78,168,236,0.8)','rgba(59,145,208,0.8)','rgba(165,235,250,0.8)'],
+                    avoidLabelOverlap: false,
+                    labelLine:{normal:{length:3,length2:3,show:true}},
+                    itemStyle: {
+                        normal: {
+                            label:{show: true} ,
+                            shadowBlur: 5,
+                            shadowColor: 'rgba(0, 0, 0, .2)'
+                        }
+                    },
+                    data:[]
+                },{
+                    name: '告警规则TOP7',
+                    z:1,
+                    type: 'bar',
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
+                    barWidth:'50%',
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                                offset: 0,
+                                color: 'rgba(170,255,255,1)'
+                            }, {
+                                offset: .8,
+                                color: 'rgba(77,175,240,1)'
+                            }], false),
+                            shadowColor: 'rgba(77,175,240,.8)',
+                            shadowBlur:5
+                        }
+                    },
+                    label:{
+                        normal:{
+                            show:true,
+                            position:"right",
+                            textStyle:{
+                                color:"#9EA7C4"
+                            }
+                        }
+                    },
+                    data:[]
+                }
+            ]
+        };
+        option.yAxis[0].data = ["其他","调用异常","日志异常","性能异常","服务器异常"];
+        option.series[0].data= [{value:335, name:'SMS'},{value:310, name:'EMAIL'}];
+        option.series[1].data= [56,134,356,456,556];
+        return option;
+    };
     return instance;
 }
 
@@ -798,13 +1032,18 @@ export default {
             appName: "小金库2.0-查询服务",
             sysdate: new Date(),
 
-            waterLevel:drawEcharts().liquidFill(),
+            waterLevel_O:drawEcharts().liquidFill(),
+            timeCons_O:drawEcharts().line(),
+            tps_O:drawEcharts().line(),
 
-            optionLine:drawEcharts().line(),
+            health_O:drawEcharts().radar(),
+            alarm_O:drawEcharts().pieBar(),
+            succrate_O:drawEcharts().bar(),
 
-            optionBar:drawEcharts().bar(),
-
-            pie:drawEcharts().pie()
+            tpsPie_O:drawEcharts().pie(),
+            avgPie_O:drawEcharts().pie(),
+            tpPie_O:drawEcharts().pie(),
+            failPie_O:drawEcharts().pie()
         }
     },
     methods: {

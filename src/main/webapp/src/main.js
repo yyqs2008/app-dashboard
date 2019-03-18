@@ -6,7 +6,7 @@ import "echarts-liquidfill"
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
-
+import 'echarts/lib/chart/radar'
 
 Vue.prototype.$formatDate = formatDate;
 
