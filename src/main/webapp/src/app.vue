@@ -6,7 +6,7 @@
         <div class="bg_fireworks" :open="isOpenFireworks">
             <canvas id='fireworks'></canvas>
             <div style="display:none">
-                <div class="shape">{{$formatNumber(toDayTotal)}}</div>
+                <div class="shape">{{ $formatNumber(toDayTotal) }}</div>
             </div>
         </div>
 
