@@ -4,8 +4,8 @@
   "description": "webpack4-vue2x",
   "main": "main.js",
   "scripts": {
-    "prod": "webpack --config webpack.prod.config.js --watch --progress --display-reason",
-    "dev-server": "webpack-dev-server --config webpack.dev.config.js --open --hot --inline --progress  "
+    "prod": "cross-env NODE_ENV=production webpack --config webpack.prod.config.js --watch --progress --display-reason",
+    "dev-server": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.config.js --open --hot --inline --progress  "
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
+    "mockjs": "^1.0.1-beta3",
     "style-loader": "^0.23.1",
     "vue": "^2.5.17",
     "vue-loader": "^15.4.2",
@@ -26,9 +27,12 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "cross-env": "^5.2.0",
     "echarts": "^4.1.0",
     "echarts-liquidfill": "^2.0.4",
     "imports-loader": "^0.8.0",
+    "qs": "^6.6.0",
     "snapsvg": "^0.5.1",
     "vue-echarts": "^4.0.1"
   }

@@ -6,6 +6,7 @@ import Snap from 'imports-loader?this=>window,fix=>module.exports=0!snapsvg/dist
  */
 export function drawShape(svgId){
     const SVG = Snap(svgId);
+    let inShapeCount=0,outShapeCount=0;
     let instance = {}
 
     let shapeFactory = {
@@ -133,7 +134,9 @@ export function drawShape(svgId){
                 _title.node.textContent = title;
                 return SVG.group(_text,_title)
             }
-            return SVG.group(stage1(),stage2(),stage3()).transform(new Snap.Matrix().scale(1.3).translate(x, y));
+            return SVG.group(stage1(),stage2(),stage3()).transform(new Snap.Matrix().scale(1.3).translate(x, y)).attr({
+                class:"polygon"
+            });
         },
         line:function(lineId ,tps='-',tp='-'){
             let _line = (rotate,strPath,retrorse=0)=>{
@@ -176,7 +179,9 @@ export function drawShape(svgId){
                 //     }, 2500, mina.easeinout,()=>{loop()});
                 // };
                 // loop();
-                return SVG.group(_path,_text1,_text2).transform(new Snap.Matrix().rotate(rotate, 0, 0));
+                return SVG.group(_path,_text1,_text2).transform(new Snap.Matrix().rotate(rotate, 0, 0)).attr({
+                    class:"line"
+                });
             };
             let lineMap = new Map();
             switch (lineId) {
@@ -231,7 +236,9 @@ export function drawShape(svgId){
                 _title.node.textContent = title;
                 return SVG.group(_text,_title)
             }
-            return SVG.group(stage1(),stage2()).transform(new Snap.Matrix().translate(x, y));
+            return SVG.group(stage1(),stage2()).transform(new Snap.Matrix().translate(x, y)).attr({
+                class:"polygon"
+            });
         },
         legend:function(){
             let leg1 = SVG.path("M -500 -270 h 65").attr({
@@ -259,35 +266,80 @@ export function drawShape(svgId){
     };
     shapeFactory.legend();
 
-    instance.CentreCircle =(text,title)=>{
-        shapeFactory.centre(text,title);
-        return instance;
-    };
-    instance.InShape = (index, text, title, tps, tp)=>{
-        if(index<=3){
-            let axis = [[-203,-186],[-285,-103],[-285,16]][index-1];
-            shapeFactory.polygon(axis[0],axis[1],text, title);
-            shapeFactory.line(index,tps, tp);
+    instance.InShape = (id, text, title, tps, tp)=>{
+        let group = SVG.select("#group_"+id);
+        if(group){
+            _updateValue(group,text,title,tps,tp);
+        }else{
+            let index = inShapeCount + 1;
+            if(index<=3){
+                let axis = [[-203,-186],[-285,-103],[-285,16]][index - 1];
+                SVG.group(shapeFactory.polygon(axis[0],axis[1],text, title),shapeFactory.line(index,tps, tp)).attr({
+                    id: "group_"+id
+                });
+                inShapeCount++;
+            }
         }
         return instance;
     };
-    instance.OutShape = (index, text, title, tps, tp)=>{
-        if(index<=3){
-            let axis = [[103,-186],[185,-103],[185,16]][index-1];
-            shapeFactory.polygon(axis[0],axis[1],text, title);
-            shapeFactory.line(index*-1,tps, tp);
+    instance.OutShape = (id, text, title, tps, tp)=>{
+        let group = SVG.select("#group_"+id);
+        if(group){
+            _updateValue(group,text,title,tps,tp,0);
+        }else {
+            let index = outShapeCount + 1;
+            if (index <= 3) {
+                let axis = [[103, -186], [185, -103], [185, 16]][index - 1];
+                SVG.group(shapeFactory.polygon(axis[0], axis[1], text, title), shapeFactory.line(index * -1, tps, tp)).attr({
+                    id: "group_" + id
+                });
+                outShapeCount++;
+            }
         }
         return instance;
     };
     instance.DBServer =(title, tps, tp)=>{
-        shapeFactory.server(-205, 180, "DB", title);
-        shapeFactory.line(4,tps, tp);
+        let group = SVG.select("#group_db");
+        if(group){
+            _updateValue(group,"DB",title,tps,tp);
+        }else{
+            SVG.group(shapeFactory.server(-205, 180, "DB", title),shapeFactory.line(4,tps, tp)).attr({
+                id: "group_db"
+            });
+        }
         return instance;
     }
     instance.CacheServer =(title, tps, tp)=>{
-        shapeFactory.server(125, 180, "Cache", title);
-        shapeFactory.line(-4, tps, tp);
+        let group = SVG.select("#group_cache");
+        if(group){
+            _updateValue(group,"Cache",title,tps,tp,0);
+        }else {
+            SVG.group(shapeFactory.server(125, 180, "Cache", title), shapeFactory.line(-4, tps, tp)).attr({
+                id: "group_cache"
+            });
+        }
         return instance;
+    }
+    instance.CentreCircle =(text,title)=>{
+        let group = SVG.select("#group_log");
+        if(group){
+            group.selectAll("text")[1].node.innerHTML=text;
+            group.select("title").node.innerHTML=title;
+        }else {
+            shapeFactory.centre(text, title).attr({
+                id: "group_log"
+            });
+        }
+        return instance;
+    };
+
+    let _updateValue = function(group,text,title,tps,tp, direction=1){
+        let polygon = group.select(".polygon");
+        polygon.select("text").node.innerHTML=text;
+        group.select("title").node.innerHTML=title;
+        let textPath = group.selectAll(".line textPath");
+        textPath[0].selectAll("tspan")[direction].node.innerHTML=tps;
+        textPath[1].selectAll("tspan")[direction].node.innerHTML=tp;
     }
 
     return instance;

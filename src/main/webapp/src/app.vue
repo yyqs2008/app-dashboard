@@ -14,7 +14,7 @@
             <nav class="navgetion">
                 <div class='title'>
                     <div class="text">{{ appName }}</div>
-                    <div class="subtext">{{ $formatDate(sysdate,'yyyy年MM月dd日 hh时mm分ss') }}</div>
+                    <div class="subtext">{{ $formatDate(sysdate,'yyyy年MM月dd日 hh时mm分ss秒') }}</div>
                 </div>
                 <svg id="svgroot" width="100%" height="80px"></svg>
             </nav>

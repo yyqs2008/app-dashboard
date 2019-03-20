@@ -71,7 +71,7 @@ export function fireworks(domId){
             if(bigbooms.length>150){
                 bigbooms = [];
             }
-            console.log(bigbooms);
+            //console.log(bigbooms);
         };
 
         /*
