@@ -8,6 +8,8 @@ axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest';
  */
 if (process.env.NODE_ENV === 'production') {
     axios.defaults.baseURL = '/';
+    //引入mockApi.js文件
+    require('../service/mockApi');
 } else {
     axios.defaults.baseURL = '/api/';
     //引入mockApi.js文件
