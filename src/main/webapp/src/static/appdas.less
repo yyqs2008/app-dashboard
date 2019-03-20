@@ -7,6 +7,7 @@ html,body{
     background: radial-gradient(#0e284d 0%, #1f2630 70%);
     box-shadow: #000000 0px 0px 100px 10px inset;
 }
+
 .app-container {
     height: inherit;
     .bg_fireworks {
@@ -88,12 +89,36 @@ html,body{
                     padding:7px 6px 0px 6px;
                     box-sizing:border-box;
                     .chartDiv{
+                        position: relative;
                         border:1px solid rgba(0,250,255,.1);
                         height:inherit;
                         box-shadow: rgba(0,0,0,.1) 0px 0px 100px 20px inset;
                         .chart-main{
                             width: 100%;
                             height: 100%;
+                        }
+                        &[empty]{
+                            &::before {
+                                content:'无数据';
+                                position: absolute;
+                                top:calc(50% - 10px);
+                                width:100%;
+                                text-align: center;
+                                text-shadow: #00faff 0px 0px 15px;
+                                z-index: 10;
+                                opacity: 0.8;
+                            }
+                            &::after {
+                                content:'';
+                                display: block;
+                                width:100%;
+                                height: 1px;
+                                position: absolute;
+                                top:50%;
+                                border: 0px;
+                                border-bottom: 1px solid;
+                                border-image: linear-gradient(to left, rgba(0, 0, 0, 0), rgba(0, 250, 255, 0.3), rgba(240, 180, 30, 0.8), rgba(0, 250, 255, 0.3), rgba(0, 0, 0, 0)) 1 10;
+                            }
                         }
                     }
                 }

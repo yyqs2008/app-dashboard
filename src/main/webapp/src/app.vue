@@ -27,6 +27,7 @@
                         <div>
                             <span class='corner-icon-t'></span>
                             <div class='chartDiv'>
+                            <!--<div class='chartDiv' empty>-->
                                 <chart :options="waterLevel_O" ref="waterLevel_C" class="chart-main" auto-resize/>
                             </div>
                             <span class='corner-icon-b'></span>
