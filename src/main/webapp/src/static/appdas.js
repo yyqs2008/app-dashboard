@@ -7,7 +7,7 @@ export default {
         return {
             isOpenFireworks:false,
             toDayTotal:"100,000,000",
-            appName: "小金库2.0-查询服务",
+            appName: "App应用2.0-查询服务",
             sysdate: new Date(),
 
             waterLevel_O:dEcharts.liquidFill(),
