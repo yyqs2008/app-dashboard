@@ -39,9 +39,12 @@
                         </span>
                         <div>
                             <div class="chartDivTool">
-                                <span data="6">avg</span>
-                                <span data="8">tp90</span>
-                                <span data="9" selection>tp99</span>
+                                <input id ="cavg"  type="radio" name="att"/>
+                                <label for="cavg"  data="6">avg</label>
+                                <input id ="ctp90" type="radio" name="att"/>
+                                <label for="ctp90" data="8">tp90</label>
+                                <input id ="ctp99" type="radio" name="att" checked/>
+                                <label for="ctp99" data="9">tp99</label>
                             </div>
                             <span class='corner-icon-t'></span>
                             <div  class='chartDiv'>
@@ -189,10 +192,12 @@
                         <div>
                             <div class="chartDivTool" id="chartDivTool">
                                 <i>近</i>
-                                <span data="0.5">0.5</span>
-                                <span data="2">2</span>
-                                <span data="6" selection>6</span>
-                                <span data="24">24</span>
+                                <input id ="ad1" type="radio" name="ad" checked/>
+                                <label for="ad1" data="1">1</label>
+                                <input id ="ad2" type="radio" name="ad"/>
+                                <label for="ad2" data="2">2</label>
+                                <input id ="ad3" type="radio" name="ad"/>
+                                <label for="ad3" data="6">6</label>
                                 <i>小时</i>
                             </div>
                             <span class='corner-icon-t'></span>
